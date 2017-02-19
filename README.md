@@ -21,7 +21,7 @@ import cartoon_cat as cc
 
 if __name__ == '__main__':
 
-    site = 'http://www.tazhe.com/mh/9170/'
+    site = 'http://www.tazhe.com/mh/8155/'
 
     crawler = cc.CartoonCat(
         site=site,                                  # 漫画首页
