@@ -136,5 +136,5 @@ class CartoonCat:
         begin = self.__begin if self.__begin >= 0 else 0
         end = self.__end if self.__end >= 0 else len(self.__chapter_list)
 
-        for chapter_idx in xrange(begin, end + 1):
+        for chapter_idx in xrange(begin, end):
             self.download_chapter(chapter_idx)
