@@ -50,7 +50,7 @@ class CartoonCat:
         self.__get_chapter_list()
 
         if self.__begin >= len(self.__chapter_list) \
-                or (0 < self.__end < self.__begin):
+                or (0 <= self.__end < self.__begin):
             raise Exception('the begin and end index of chapter is illegal')
 
         logging.basicConfig(format='[%(asctime)s] %(levelname)s::%(module)s::%(funcName)s() %(message)s', level=logging.INFO)
