@@ -84,8 +84,8 @@ class CartoonCat:
             with open(save_path, 'wb') as fp:
                 fp.write(urllib.urlopen(url).read())
         except Exception, et:
-            logging.ERROR(et, exc_info=True)
-            logging.ERROR('cannot download: %s' % url)
+            logging.error(et, exc_info=True)
+            logging.error('cannot download: %s' % url)
 
     def download_chapter(self, chapter_idx, save_folder=None):
         """
