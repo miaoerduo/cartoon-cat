@@ -4,6 +4,8 @@
 
 使用selenium + PhantomJs搭建的简单漫画爬虫工具。
 
+博客地址: http://www.miaoerduo.com/python/爬虫-漫画喵的100行逆袭.html
+
 可以用于抓取 http://www.tazhe.com 的漫画资源。
 
 使用：
