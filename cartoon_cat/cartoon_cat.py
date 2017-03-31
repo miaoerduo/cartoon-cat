@@ -2,7 +2,7 @@
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-import urllib
+import urllib2
 import logging
 import os
 from os import path as osp
@@ -73,19 +73,26 @@ class CartoonCat:
             self.__chapter_list.append((chapter_elem.text, chapter_elem.get_attribute('href')))
 
     @staticmethod
-    def __download(url, save_path):
+    def __download(url, save_path, try_time=3, timeout=30):
         """
         下载
         :param url:
         :param save_path:
+        :param try_time:
+        :param sav:
         :return:
         """
-        try:
-            with open(save_path, 'wb') as fp:
-                fp.write(urllib.urlopen(url).read())
-        except Exception, et:
-            logging.error(et, exc_info=True)
-            logging.error('cannot download: %s' % url)
+        while try_time > 0:
+            try:
+                content = urllib2.urlopen(url, timeout=timeout).read()
+                with open(save_path, 'wb') as fp:
+                    fp.write(content)
+                break
+            except Exception, et:
+                logging.error(et, exc_info=True)
+                try_time -= 1
+                if try_time == 0:
+                    logging.error('cannot download: %s to %s' % (url, save_path))
 
     def download_chapter(self, chapter_idx, save_folder=None):
         """
