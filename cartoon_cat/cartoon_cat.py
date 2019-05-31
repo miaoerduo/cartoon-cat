@@ -55,7 +55,6 @@ class CartoonCat:
 
         logging.basicConfig(format='[%(asctime)s] %(levelname)s::%(module)s::%(funcName)s() %(message)s', level=logging.INFO)
 
-
     def __del__(self):
         self.__browser.quit()
 
@@ -66,9 +65,7 @@ class CartoonCat:
         """
 
         self.__browser.get(self.__site)
-        chapter_elem_list = self.__browser.find_elements_by_css_selector('#play_0 ul li a')
-        chapter_elem_list.reverse()  # 原本的章节是倒叙的
-
+        chapter_elem_list = self.__browser.find_elements_by_css_selector('.comic-chapters .list ul li a')
         for chapter_elem in chapter_elem_list:
             self.__chapter_list.append((chapter_elem.text, chapter_elem.get_attribute('href')))
 
@@ -116,22 +113,20 @@ class CartoonCat:
             os.mkdir(save_folder)
 
         image_idx = 1
-
         self.__browser.get(chapter_url)
 
         while True:
-            image_url = self.__browser.find_element_by_css_selector('#qTcms_pic').get_attribute('src')
+            image_div = self.__browser.find_element_by_css_selector('mip-img')
+            image_url = image_div.get_attribute('src')
             save_image_name = osp.join(save_folder, ('%05d' % image_idx) + '.' + osp.basename(image_url).split('.')[-1])
             self.__download(image_url, save_image_name)
 
-            # 通过模拟点击加载下一页，如果已经是最后一页，会有弹窗提示，通过这个确定章节是否下完
-            self.__browser.find_element_by_css_selector('a.next').click()
-            try:
-                self.__browser.find_element_by_css_selector('#bgDiv')
+            image_div.click()       # 跳转页面
+
+            # 页面结束会跳回首页，而首页的url不是html结尾，可用于判断章节是否爬取完。
+            if not self.__browser.current_url.endswith('html'):
                 break
-            except NoSuchElementException:
-                # 没有结束弹窗，继续下载
-                image_idx += 1
+            image_idx += 1
 
         logging.info('#### DOWNLOAD CHAPTER COMPLETE ####')
 
