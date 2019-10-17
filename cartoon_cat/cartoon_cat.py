@@ -85,7 +85,7 @@ class CartoonCat:
                 with open(save_path, 'wb') as fp:
                     fp.write(content)
                 break
-            except Exception, et:
+            except Exception as et:
                 logging.error(et, exc_info=True)
                 try_time -= 1
                 if try_time == 0:
