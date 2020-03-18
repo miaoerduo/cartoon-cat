@@ -128,18 +128,13 @@ class CartoonCat:
             save_image_name = osp.join(save_folder, ('%05d' % image_idx) + '.' + image_ext)
             self.__download(image_url, save_image_name, headers)
 
-            def get_page_name(url):
-                sep = url.find("#")
-                if sep > 0:
-                    return url[:sep]
-                return url
-
-            curr_name = get_page_name(self.__browser.current_url)
+            curr_url = self.__browser.current_url
 
             next_div.click()       # 跳转页面
 
-            next_name = get_page_name(self.__browser.current_url)
-            if next_name != curr_name:
+            next_url = self.__browser.current_url
+
+            if next_url == curr_url:
                 break
             image_idx += 1
 
