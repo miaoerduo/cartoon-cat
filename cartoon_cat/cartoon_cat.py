@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-import urllib.request as urllib2
+import urllib.request
 import logging
 import os
 from os import path as osp
@@ -65,12 +64,13 @@ class CartoonCat:
         """
 
         self.__browser.get(self.__site)
-        chapter_elem_list = self.__browser.find_elements_by_css_selector('.comic-chapters .list ul li a')
+        chapter_elem_list = self.__browser.find_elements_by_css_selector('#chapterList li a')
         for chapter_elem in chapter_elem_list:
             self.__chapter_list.append((chapter_elem.text, chapter_elem.get_attribute('href')))
+        self.__chapter_list.reverse()
 
     @staticmethod
-    def __download(url, save_path, try_time=3, timeout=30):
+    def __download(url, save_path, headers=None, try_time=3, timeout=30):
         """
         下载
         :param url:
@@ -81,7 +81,8 @@ class CartoonCat:
         """
         while try_time > 0:
             try:
-                content = urllib2.urlopen(url, timeout=timeout).read()
+                req = urllib.request.Request(url, headers=headers)
+                content = urllib.request.urlopen(req, timeout=timeout).read()
                 with open(save_path, 'wb') as fp:
                     fp.write(content)
                 break
@@ -116,15 +117,25 @@ class CartoonCat:
         self.__browser.get(chapter_url)
 
         while True:
-            image_div = self.__browser.find_element_by_css_selector('mip-img')
-            image_url = image_div.get_attribute('src')
+            next_div = self.__browser.find_element_by_css_selector('#next')
+            image_tag = self.__browser.find_element_by_css_selector('#manga img')
+            image_url = image_tag.get_attribute('src')
+            headers = {"referer": chapter_url}
             save_image_name = osp.join(save_folder, ('%05d' % image_idx) + '.' + osp.basename(image_url).split('.')[-1])
-            self.__download(image_url, save_image_name)
+            self.__download(image_url, save_image_name, headers)
 
-            image_div.click()       # 跳转页面
+            def get_page_name(url):
+                sep = url.find("#")
+                if sep > 0:
+                    return url[:sep]
+                return url
 
-            # 页面结束会跳回首页，而首页的url不是html结尾，可用于判断章节是否爬取完。
-            if not self.__browser.current_url.endswith('html'):
+            curr_name = get_page_name(self.__browser.current_url)
+
+            next_div.click()       # 跳转页面
+
+            next_name = get_page_name(self.__browser.current_url)
+            if next_name != curr_name:
                 break
             image_idx += 1
 
