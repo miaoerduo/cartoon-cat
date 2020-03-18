@@ -5,6 +5,7 @@ import urllib.request
 import logging
 import os
 from os import path as osp
+import re
 
 
 class Enum(tuple):
@@ -121,7 +122,10 @@ class CartoonCat:
             image_tag = self.__browser.find_element_by_css_selector('#manga img')
             image_url = image_tag.get_attribute('src')
             headers = {"referer": chapter_url}
-            save_image_name = osp.join(save_folder, ('%05d' % image_idx) + '.' + osp.basename(image_url).split('.')[-1])
+            image_name = osp.basename(image_url)
+            image_name = image_name.split('?')[0]
+            image_ext = image_name.split('.')[-1]
+            save_image_name = osp.join(save_folder, ('%05d' % image_idx) + '.' + image_ext)
             self.__download(image_url, save_image_name, headers)
 
             def get_page_name(url):
