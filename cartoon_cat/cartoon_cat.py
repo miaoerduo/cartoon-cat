@@ -2,7 +2,7 @@
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-import urllib2
+import urllib.request as urllib2
 import logging
 import os
 from os import path as osp
@@ -138,5 +138,5 @@ class CartoonCat:
         begin = self.__begin if self.__begin >= 0 else 0
         end = self.__end if self.__end >= 0 else len(self.__chapter_list)
 
-        for chapter_idx in xrange(begin, end):
+        for chapter_idx in range(begin, end):
             self.download_chapter(chapter_idx)

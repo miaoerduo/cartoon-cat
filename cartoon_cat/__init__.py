@@ -1,1 +1,1 @@
-from cartoon_cat import *
+from .cartoon_cat import *
