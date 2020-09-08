@@ -12,7 +12,7 @@
 
 使用selenium + PhantomJs搭建的简单漫画爬虫工具。
 
-博客地址: http://www.miaoerduo.com/python/爬虫-漫画喵的100行逆袭.html
+博客地址: https://www.miaoerduo.com/2017/02/19/cartoon-cat-client/
 
 可以用于抓取 https://m.36mh.com 的漫画资源。(这个是手机版的页面，比较容易分析)
 
